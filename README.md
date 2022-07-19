@@ -8,7 +8,7 @@ stl库的简易化实现
 
 - compile_env：存放ide相关
   - windows：使用vs2022可直接打开工程项目
-  - makefile：linux平台编译脚本
+  - linux：使用build.sh编译即可
 - docs：容器、算法等文档
 - src：源码
 - test：测试代码
