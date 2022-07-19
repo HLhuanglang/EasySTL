@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="src\algo">
+      <UniqueIdentifier>{ea0ee663-0fee-4ddb-ade4-3be9a37b5f34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\container">
+      <UniqueIdentifier>{b250d587-192f-4dc0-9914-ad6f27755c48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{046493ab-7a5a-4edc-8928-2672a0d5b782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\std_example">
+      <UniqueIdentifier>{1b7e37e5-e441-4031-b73e-32f6021d4016}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\test\color.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\unit_test.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\algorithm.h">
+      <Filter>src\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\no_modifying_seq_operations.h">
+      <Filter>src\algo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\test\example.h">
+      <Filter>test\std_example</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\test\main.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\unit_test.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\algo_test.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\example.cpp">
+      <Filter>test\std_example</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\docs\algorithm.md">
+      <Filter>doc</Filter>
+    </None>
+  </ItemGroup>
+</Project>
