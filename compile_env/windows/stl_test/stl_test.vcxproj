@@ -18,31 +18,12 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\algorithm.h" />
-    <ClInclude Include="..\..\src\allocator.h" />
-    <ClInclude Include="..\..\src\array.h" />
-    <ClInclude Include="..\..\src\deque.h" />
-    <ClInclude Include="..\..\src\forward_list.h" />
-    <ClInclude Include="..\..\src\hashmap.h" />
-    <ClInclude Include="..\..\src\list.h" />
-    <ClInclude Include="..\..\src\map.h" />
-    <ClInclude Include="..\..\src\no_modifying_seq_operations.h" />
-    <ClInclude Include="..\..\src\queue.h" />
-    <ClInclude Include="..\..\src\rb_tree.h" />
-    <ClInclude Include="..\..\src\set.h" />
-    <ClInclude Include="..\..\src\stack.h" />
-    <ClInclude Include="..\..\src\unorderd_map.h" />
-    <ClInclude Include="..\..\src\unordered_set.h" />
-    <ClInclude Include="..\..\src\vector.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e9c6ff79-ee08-4348-b148-3437a39a6a99}</ProjectGuid>
-    <RootNamespace>msvcstl</RootNamespace>
+    <ProjectGuid>{ea684950-be00-4661-a04c-b37060ba88f7}</ProjectGuid>
+    <RootNamespace>stltest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>stl</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -90,24 +71,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(projectdir)..\..\bin\</OutDir>
-    <IntDir>$(projectdir)..\..\bin\obj\</IntDir>
+    <OutDir>$(projectdir)..\..\..\bin\</OutDir>
+    <IntDir>$(projectdir)..\..\..\bin\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(projectdir)..\..\bin\</OutDir>
-    <IntDir>$(projectdir)..\..\bin\obj\</IntDir>
+    <OutDir>$(projectdir)..\..\..\bin\</OutDir>
+    <IntDir>$(projectdir)..\..\..\bin\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(projectdir)..\..\bin\</OutDir>
-    <IntDir>$(projectdir)..\..\bin\obj\</IntDir>
+    <OutDir>$(projectdir)..\..\..\bin\</OutDir>
+    <IntDir>$(projectdir)..\..\..\bin\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(projectdir)..\..\bin\</OutDir>
-    <IntDir>$(projectdir)..\..\bin\obj\</IntDir>
+    <OutDir>$(projectdir)..\..\..\bin\</OutDir>
+    <IntDir>$(projectdir)..\..\..\bin\obj\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -115,10 +92,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(projectdir)..\..\src;$(projectdir)..\..\test</AdditionalIncludeDirectories>
-      <PreprocessToFile>false</PreprocessToFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>../../../src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,7 +111,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(projectdir)..\..\src;$(projectdir)..\..\test</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,10 +126,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(projectdir)..\..\src;$(projectdir)..\..\test</AdditionalIncludeDirectories>
-      <PreprocessToFile>false</PreprocessToFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>../../../src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -170,7 +145,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(projectdir)..\..\src;$(projectdir)..\..\test</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -179,6 +154,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\test\algo_test.cpp" />
+    <ClCompile Include="..\..\..\test\any_of.cpp" />
+    <ClCompile Include="..\..\..\test\container_test.cpp" />
+    <ClCompile Include="..\..\..\test\main.cpp" />
+    <ClCompile Include="..\..\..\test\vector_test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\test\algo_test.h" />
+    <ClInclude Include="..\..\..\test\container_test.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -5,57 +5,76 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="test">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="src\algo">
       <UniqueIdentifier>{ea0ee663-0fee-4ddb-ade4-3be9a37b5f34}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\container">
       <UniqueIdentifier>{b250d587-192f-4dc0-9914-ad6f27755c48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="doc">
-      <UniqueIdentifier>{046493ab-7a5a-4edc-8928-2672a0d5b782}</UniqueIdentifier>
+    <Filter Include="src\util">
+      <UniqueIdentifier>{7dd39800-ac0c-4a32-99c6-557b20d1a338}</UniqueIdentifier>
     </Filter>
-    <Filter Include="test\std_example">
-      <UniqueIdentifier>{1b7e37e5-e441-4031-b73e-32f6021d4016}</UniqueIdentifier>
+    <Filter Include="src\container\sequence_containers">
+      <UniqueIdentifier>{fc20f091-b759-45b0-a502-b825b4acb5ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\container\container_adaptors">
+      <UniqueIdentifier>{084ff73f-99b5-476b-bc15-52aed553d116}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\container\associative_containers">
+      <UniqueIdentifier>{1936bb7e-6b08-4b72-a306-b6e3f26daf17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\container\unordered_associative_containers">
+      <UniqueIdentifier>{2608cce4-8abb-44c4-b96e-c37960909b7e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\test\color.h">
-      <Filter>test</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\test\unit_test.h">
-      <Filter>test</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\algorithm.h">
       <Filter>src\algo</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\no_modifying_seq_operations.h">
       <Filter>src\algo</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\test\example.h">
-      <Filter>test\std_example</Filter>
+    <ClInclude Include="..\..\src\allocator.h">
+      <Filter>src\util</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\test\main.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\unit_test.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\algo_test.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\test\example.cpp">
-      <Filter>test\std_example</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\docs\algorithm.md">
-      <Filter>doc</Filter>
-    </None>
+    <ClInclude Include="..\..\src\array.h">
+      <Filter>src\container\sequence_containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\vector.h">
+      <Filter>src\container\sequence_containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\forward_list.h">
+      <Filter>src\container\sequence_containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\deque.h">
+      <Filter>src\container\sequence_containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\list.h">
+      <Filter>src\container\sequence_containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\queue.h">
+      <Filter>src\container\container_adaptors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stack.h">
+      <Filter>src\container\container_adaptors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\set.h">
+      <Filter>src\container\associative_containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\map.h">
+      <Filter>src\container\associative_containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\unorderd_map.h">
+      <Filter>src\container\unordered_associative_containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\unordered_set.h">
+      <Filter>src\container\unordered_associative_containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hashmap.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rb_tree.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

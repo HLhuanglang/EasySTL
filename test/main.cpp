@@ -1,7 +1,8 @@
-#include "unit_test.h"
-#include <iostream>
+#include "algo_test.h"
+#include "container_test.h"
 
 int main() {
-	RUN_ALL_TESTS();
+	algo_test();
+	container_test();
 	return 0;
 }
