@@ -1,6 +1,8 @@
 #ifndef __ALLOCATOR_H
 #define __ALLOCATOR_H
 
+#include "construct.h"
+
 #include <cstddef>	//for ptrdiff_t
 #include <type_traits>
 #include <iterator>
@@ -64,52 +66,36 @@ namespace stl
 	template <class T>
 	void allocator<T>::construct(T *ptr) {
 		new((void *)ptr) T();
+		//stl::construct(ptr);
 	}
 
 	template <class T>
 	void allocator<T>::construct(T *ptr, const T &value) {
 		new((void *)ptr)	T(value);
+		//stl::construct(ptr,value);
 	}
 
 	template <class T>
 	void allocator<T>::construct(T *ptr, T &&value) {
 		new((void *)ptr)	T(std::move(value));
+		//stl::construct(ptr,std::move(value));
 	}
 
 	template <class T>
 	template <class ...Args>
 	void allocator<T>::construct(T *ptr, Args&& ...args) {
 		::new ((void *)ptr) T(std::forward<Args>(args)...);
-	}
-
-	template<typename T>
-	void _destory(T *ptr, std::true_type) {}
-
-	template<typename T>
-	void _destory(T *ptr, std::false_type) {
-		if (ptr != nullptr) {
-			ptr->~T();	//编译时多态,类型T必须有析构函数
-		}
+		//stl::construct(ptr,std::forward<Args>(args)...);
 	}
 
 	template <class T>
 	void allocator<T>::destroy(T *ptr) {
-		_destory(ptr, std::is_trivially_destructible<T>());
-	}
-
-	template <class ForwardIter>
-	void _destroy_category(ForwardIter, ForwardIter, std::true_type) {}
-
-	template <class ForwardIter>
-	void _destroy_category(ForwardIter first, ForwardIter last, std::false_type) {
-		for (; first != last; ++first)
-			destroy(&*first);
+		stl::destroy(ptr);
 	}
 
 	template <class T>
 	void allocator<T>::destroy(T *first, T *last) {
-		_destroy_category(first, last, std::is_trivially_destructible<
-						  typename std::iterator_traits<T>::value_type>());
+		stl::destroy(first, last);	//如果destory不封装一层,而是直接在该文件内实现,就会出现stl::allocator<T>::destory(&*ptr) 这种场景,模板参数会其冲突.
 	}
 }
 
