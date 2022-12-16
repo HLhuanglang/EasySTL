@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\src\algorithm.h" />
     <ClInclude Include="..\..\src\allocator.h" />
     <ClInclude Include="..\..\src\array.h" />
+    <ClInclude Include="..\..\src\basic_string.h" />
     <ClInclude Include="..\..\src\construct.h" />
     <ClInclude Include="..\..\src\deque.h" />
     <ClInclude Include="..\..\src\forward_list.h" />

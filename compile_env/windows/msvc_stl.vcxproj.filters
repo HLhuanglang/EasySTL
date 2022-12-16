@@ -26,6 +26,9 @@
     <Filter Include="src\container\unordered_associative_containers">
       <UniqueIdentifier>{2608cce4-8abb-44c4-b96e-c37960909b7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\string">
+      <UniqueIdentifier>{81c7c3d9-5d0c-4607-826c-b15e34e14aff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\algorithm.h">
@@ -78,6 +81,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\construct.h">
       <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\basic_string.h">
+      <Filter>src\string</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
