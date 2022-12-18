@@ -15,4 +15,4 @@
 #define LIGHT_GREEN "\033[1m\033[32m"
 #define LIGHT_RED "\033[1m\033[31m"
 
-#endif	// !__COLOR_H
+#endif // !__COLOR_H
