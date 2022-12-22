@@ -155,12 +155,28 @@ template <typename input_iterator1, typename input_iterator2>
 bool equal(input_iterator1 first1, input_iterator1 last1,
            input_iterator2 first2)
 {
+    while (first1 != last1) {
+        if (!(*first1 == *first2)) {
+            return false;
+        }
+        ++first1;
+        ++first2;
+    }
+    return true;
 }
 
 template <typename input_iterator1, typename input_iterator2, typename binary_predicate>
 bool equal(input_iterator1 first1, input_iterator1 last1,
            input_iterator2 first2, binary_predicate pred)
 {
+    while (first1 != last1) {
+        if (!pred(first1, first2)) {
+            return false;
+        }
+        ++first1;
+        ++first2;
+    }
+    return true;
 }
 
 template <typename forward_iterator1, typename forward_iterator2>

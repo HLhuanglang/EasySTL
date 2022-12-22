@@ -1,9 +1,6 @@
-#include "algo_test.h"
-#include "container_test.h"
+#include "test.h"
 
 int main()
 {
-    algo_test();
-    container_test();
-    return 0;
+    vector_test();
 }
