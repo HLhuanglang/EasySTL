@@ -1,12 +1,12 @@
-//set¡¢multiset
+// set?multiset
 #ifndef __SET_H
 #define __SET_H
-namespace stl {
+namespace nostd {
 class set {
-    //todo
+    // todo
 };
 class multiset {
-    //todo
+    // todo
 };
-} // namespace stl
+} // namespace nostd
 #endif // !__SET_H

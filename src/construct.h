@@ -1,64 +1,55 @@
 #ifndef __CONSTRUCT_H
 #define __CONSTRUCT_H
 
-#include <new> //for placement new
 #include <memory>
+#include <new> //for placement new
 
-namespace stl {
+namespace nostd {
 template <typename T>
-void construct(T *p)
-{
+void construct(T *p) {
     new ((void *)p) T();
 }
 
 template <typename T, typename V>
-void construct(T *ptr, const T &val)
-{
+void construct(T *ptr, const T &val) {
     new ((void *)ptr) T(val);
 }
 
 template <typename T, typename... Args>
-void construct(T *ptr, Args &&...args)
-{
+void construct(T *ptr, Args &&...args) {
     new ((void *)ptr) T(std::forward<Args>(args)...);
 }
 
 template <typename T>
-void _destroy(T *ptr, std::true_type)
-{}
+void _destroy(T *ptr, std::true_type) {}
 
 template <typename T>
-void _destroy(T *ptr, std::false_type)
-{
+void _destroy(T *ptr, std::false_type) {
     if (ptr != nullptr) {
-        ptr->~T(); //±àÒëÊ±¶àÌ¬,ÀàĞÍT±ØĞëÓĞÎö¹¹º¯Êı
+        ptr->~T(); //ç¼–è¯‘æ—¶å¤šæ€,ç±»å‹Tå¿…é¡»æœ‰ææ„å‡½æ•°
     }
 }
 
 template <typename T>
-void destroy(T *ptr)
-{
+void destroy(T *ptr) {
     _destroy(ptr, std::is_trivially_destructible<T>());
 }
 
 template <typename Ty>
-void __destroy_category(Ty first, Ty last, std::false_type)
-{
+void __destroy_category(Ty first, Ty last, std::false_type) {
     for (; first != last; ++first) {
         destroy(&*first);
     }
 }
 
 template <typename Ty>
-void __destroy_category(Ty first, Ty last, std::true_type)
-{
+void __destroy_category(Ty first, Ty last, std::true_type) {
 }
 
 template <typename T>
-void destroy(T first, T last)
-{
+void destroy(T first, T last) {
     __destroy_category(first, last, std::is_trivially_destructible<typename std::iterator_traits<T>::value_type>());
 }
-} // namespace stl
+} // namespace nostd
 
 #endif // !__CONSTRUCT_H

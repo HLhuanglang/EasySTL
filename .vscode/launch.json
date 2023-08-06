@@ -5,10 +5,10 @@
             "name": "gdb",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main",
+            "program": "${workspaceFolder}/main", //被调试程序的全路径
             "args": [],
             "stopAtEntry": true,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}",	//调试时,程序运行的路径
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -24,7 +24,8 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "build_all"
+            //开始调试之前执行的任务，执行task.json中对应label的编译任务
+            "preLaunchTask": "compile_testdemo"	
         }
     ]
 }

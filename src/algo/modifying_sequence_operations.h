@@ -1,39 +1,39 @@
 /*
-copy          
-copy_n        
-copy_if       
-copy_backward 
-move          
-move_backward 
-swap          
-swap_ranges   
-iter_swap     
-transform     
-replace       
-replace_if    
-replace_copy  
+copy
+copy_n
+copy_if
+copy_backward
+move
+move_backward
+swap
+swap_ranges
+iter_swap
+transform
+replace
+replace_if
+replace_copy
 replace_copy_i
-fill          
-fill_n        
-generate      
-generate_n    
-remove        
-remove_if     
-remove_copy   
+fill
+fill_n
+generate
+generate_n
+remove
+remove_if
+remove_copy
 remove_copy_if
-unique        
-unique_copy   
-reverse       
-reverse_copy  
-rotate        
-rotate_copy   
+unique
+unique_copy
+reverse
+reverse_copy
+rotate
+rotate_copy
 random_shuffle
-shuffle       
+shuffle
 */
 #ifndef __MODIFYING_SEQUENCE_OPERATIONS_H
 #define __MODIFYING_SEQUENCE_OPERATIONS_H
 
-namespace stl {
+namespace nostd {
 
 template <class InputIterator, class OutputIterator>
 OutputIterator copy(InputIterator first, InputIterator last, OutputIterator result);
@@ -52,5 +52,5 @@ OutputIterator move(InputIterator first, InputIterator last, OutputIterator resu
 
 template <class BidirectionalIterator1, class BidirectionalIterator2>
 BidirectionalIterator2 move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 result);
-} // namespace stl
+} // namespace nostd
 #endif

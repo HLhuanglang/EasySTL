@@ -1,11 +1,11 @@
-//map°¢multimap
+// map„ÄÅmultimap
 #ifndef __MAP_H
 #define __MAP_H
 
-namespace stl {
+namespace nostd {
 class map {
 };
 class multimap {
 };
-} // namespace stl
+} // namespace nostd
 #endif // !__MAP_H

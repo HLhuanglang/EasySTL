@@ -100,12 +100,5 @@
 			"--clang-tidy",
 			"--clang-tidy-checks=performance-*,bugprone-*"
 		],
-		"clangd.fallbackFlags": [
-			"-std=c++11",
-			"-l/usr/include/c++/9",
-			"-l/usr/local/include",
-			"-l/usr/lib/gcc/x86_64-linux-gnu/9/include",
-			"-l/usr/include/x86_64-linux-gnu"
-		],
 	}
 }
