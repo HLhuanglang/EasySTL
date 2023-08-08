@@ -16,11 +16,12 @@
 #include "iterator.h"
 
 namespace nostd {
-template <typename T>
+
+template <typename T, typename Alloc = nostd::allocator<T>>
 class vector {
  public:
     using value_type = T;
-    using allocator_type = nostd::allocator<T>;
+    using allocator_type = Alloc;
     using reference = value_type &;
     using const_reference = const value_type &;
     using size_type = typename std::allocator_traits<allocator_type>::size_type;
@@ -71,8 +72,8 @@ class vector {
 
     explicit vector(size_type n) {
         m_begin = allocator_type::allocate(n);
-        m_end = m_begin + n;
         m_end_of_storage = m_begin + n;
+        m_end = std::uninitialized_fill_n(m_begin, n, value_type());
     }
 
     vector(size_type n, const value_type &val, const allocator_type &alloc = allocator_type()) {
@@ -83,16 +84,24 @@ class vector {
     }
 
     //  如果不加任何判断,当T是int类型时候 nostd::vector<int> v(10,1) 会走到这个逻辑里面来
-    template <typename iter_t, typename std::enable_if<std::is_integral<iter_t>::value>::type>
+    template <typename iter_t, typename std::enable_if<!std::is_same<iter_t, int>::value>::type * = nullptr>
     vector(iter_t first, iter_t last, const allocator_type &alloc = allocator_type()) {
-        // todo
+        static_assert(!std::is_same<iter_t, int>::value, "iter_t cannot be int type");
+        size_type n = nostd::distance(first, last);
+        m_begin = allocator_type::allocate(n);
+        m_end_of_storage = m_begin + n;
+        m_end = std::uninitialized_copy(first, last, m_begin);
     }
 
     vector(const vector &other) {
-        // todo
+        m_begin = allocator_type::allocate(other.size());
+        m_end_of_storage = m_begin + other.size();
+        m_end = std::uninitialized_copy(other.begin(), other.end(), m_begin);
     }
     vector(const vector &other, const allocator_type &alloc) {
-        // todo
+        m_begin = alloc.allocate(other.size());
+        m_end_of_storage = m_begin + other.size();
+        m_end = std::uninitialized_copy(other.begin(), other.end(), m_begin);
     }
 
     vector(vector &&other) noexcept {
