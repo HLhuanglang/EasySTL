@@ -98,7 +98,8 @@
 			"--pch-storage=memory",
 			// clang-tidy功能
 			"--clang-tidy",
-			"--clang-tidy-checks=performance-*,bugprone-*"
+			"--clang-tidy-checks=performance-*,bugprone-*",
+			"--log=error",
 		],
 	}
 }
