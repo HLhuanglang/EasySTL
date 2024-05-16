@@ -3,7 +3,7 @@
         {
             "label": "compile_testdemo",
             "type": "shell",
-            "command": "bear make"
+            "command": "cmake -S . -B build && cmake --build build",
         }
     ],
     "version": "2.0.0"

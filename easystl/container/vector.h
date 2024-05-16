@@ -6,32 +6,32 @@
 #define __VECTOR_H
 
 #include <algorithm>
-#include <iterator>
-#include <memory>
-
 #include <initializer_list>
+#include <memory>
+#include <vector>
 
-#include "algorithm.h"
-#include "allocator.h"
-#include "iterator.h"
+#include "algo/algorithm.h"
+#include "base/allocator.h"
+#include "base/iterator.h"
 
 namespace nostd {
 
+// PS:如果想自定义alloc，就得实现nostd::allocator的所有静态方法 【编译时多态】
 template <typename T, typename Alloc = nostd::allocator<T>>
 class vector {
- public:
+ public:  //-=========member types
     using value_type = T;
     using allocator_type = Alloc;
     using reference = value_type &;
     using const_reference = const value_type &;
-    using size_type = typename std::allocator_traits<allocator_type>::size_type;
-    using difference_type = typename std::allocator_traits<allocator_type>::difference_type;
     using pointer = typename std::allocator_traits<allocator_type>::pointer;
     using const_pointer = typename std::allocator_traits<allocator_type>::const_pointer;
     using iterator = value_type *;
     using const_iterator = const value_type *;
     using reverse_iterator = nostd::reverse_iterator<iterator>;
     using const_reverse_iterator = nostd::reverse_iterator<const_iterator>;
+    using difference_type = typename nostd::iterator_traits<iterator>::difference_type;
+    using size_type = typename std::allocator_traits<allocator_type>::size_type;
 
     static_assert((std::is_same<typename allocator_type::value_type, value_type>::value), "Allocator::value_type must be same type as value_type");
 
@@ -40,32 +40,10 @@ class vector {
     iterator m_end;
     iterator m_end_of_storage;
 
- public: //-=========constructor、destructor、operator=
-    // default (1)
-    //     - explicit vector (const allocator_type& alloc = allocator_type());
-    // fill (2)
-    //     - explicit vector (size_type n);
-    //     - vector (size_type n, const value_type& val,const allocator_type& alloc = allocator_type());
-    // range (3)
-    //     - template <class InputIterator>vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
-    // copy (4)
-    //     - vector (const vector& x);
-    //     - vector (const vector& x, const allocator_type& alloc);
-    // move (5)
-    //     - vector (vector&& x);
-    //     - vector (vector&& x, const allocator_type& alloc);
-    // initializer list (6)
-    //     - vector (initializer_list<value_type> il,       const allocator_type& alloc = allocator_type());
-    //
-    // copy (1)
-    //     - vector& operator= (const vector& x);
-    // move (2)
-    //     - vector& operator= (vector&& x);
-    // initializer list (3)
-    //     - vector& operator= (initializer_list<value_type> il);
-
+ public:
+    //-=========constructor、destructor、operator=
     explicit vector(const allocator_type &alloc = allocator_type()) {
-        m_begin = allocator_type::allocate(16);
+        m_begin = alloc.allocate(16);
         m_end = m_begin;
         m_end_of_storage = m_begin + 16;
     }
@@ -77,7 +55,7 @@ class vector {
     }
 
     vector(size_type n, const value_type &val, const allocator_type &alloc = allocator_type()) {
-        m_begin = allocator_type::allocate(n);
+        m_begin = alloc.allocate(n);
         m_end = m_begin + n;
         m_end_of_storage = m_begin + n;
         std::uninitialized_fill(m_begin, m_end, val);
@@ -95,12 +73,12 @@ class vector {
 
     vector(const vector &other) {
         m_begin = allocator_type::allocate(other.size());
-        m_end_of_storage = m_begin + other.size();
+        m_end_of_storage = m_begin + other.capacity();
         m_end = std::uninitialized_copy(other.begin(), other.end(), m_begin);
     }
     vector(const vector &other, const allocator_type &alloc) {
         m_begin = alloc.allocate(other.size());
-        m_end_of_storage = m_begin + other.size();
+        m_end_of_storage = m_begin + other.capacity();
         m_end = std::uninitialized_copy(other.begin(), other.end(), m_begin);
     }
 
@@ -128,10 +106,12 @@ class vector {
     }
 
     ~vector() {
-        allocator_type::deallocate(m_begin, m_end_of_storage - m_begin);
+        allocator_type::destroy(m_begin, m_end);                          // 析构元素
+        allocator_type::deallocate(m_begin, m_end_of_storage - m_begin);  // 释放内存
+        m_begin = m_end = m_end_of_storage = nullptr;
     }
 
- public: // -=========iterators
+ public:  // -=========iterators
     iterator begin() noexcept { return m_begin; }
     const_iterator begin() const noexcept { return m_begin; }
     iterator end() noexcept { return m_end; }
@@ -145,7 +125,7 @@ class vector {
     const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(m_end); }
     const_reverse_iterator crend() const noexcept { return const_reverse_iterator(m_begin); }
 
- public: //-=========Capacity
+ public:  //-=========Capacity
     size_type size() const noexcept {
         return m_end - m_begin;
     }
@@ -189,7 +169,7 @@ class vector {
         }
     }
 
- public: //-=========Element access
+ public:  //-=========Element access
     reference operator[](size_type n) {
         return *(m_begin + n);
     }
@@ -227,7 +207,7 @@ class vector {
         return m_begin;
     }
 
- public: //-=========Modifiers
+ public:  //-=========Modifiers
     template <typename InputIterator>
     void assign(InputIterator first, InputIterator last) {
         // todo
@@ -300,7 +280,7 @@ class vector {
         // todo
     }
 
- public: //-=========Allocator
+ public:  //-=========Allocator
     allocator_type get_allocator() const noexcept {
         return allocator_type();
     }
@@ -308,29 +288,33 @@ class vector {
 
 //-=============Non-member function overloads
 template <typename T>
-bool operator==(const nostd::vector<T> &lhs, const vector<T> &rhs) {
-    // fixme：use nostd::equal
+bool operator==(const nostd::vector<T> &lhs, const std::vector<T> &rhs) {
     return (lhs.size() == rhs.size() && nostd::equal(lhs.begin(), lhs.end(), rhs.begin()));
 }
 
 template <typename T>
-bool operator!=(const nostd::vector<T> &lhs, const vector<T> &rhs) {
+bool operator==(const nostd::vector<T> &lhs, const nostd::vector<T> &rhs) {
+    return (lhs.size() == rhs.size() && nostd::equal(lhs.begin(), lhs.end(), rhs.begin()));
+}
+
+template <typename T>
+bool operator!=(const nostd::vector<T> &lhs, const std::vector<T> &rhs) {
     return !(lhs == rhs);
 }
 
 template <typename T>
-bool operator<(const nostd::vector<T> &lhs, const vector<T> &rhs) {
+bool operator<(const nostd::vector<T> &lhs, const std::vector<T> &rhs) {
     // fixme：use nostd::lexicographical_compare
     return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
 template <typename T>
-bool operator<=(const nostd::vector<T> &lhs, const vector<T> &rhs) {
+bool operator<=(const nostd::vector<T> &lhs, const std::vector<T> &rhs) {
     return !(lhs < rhs);
 }
 
 template <typename T>
-bool operator>(const nostd::vector<T> &lhs, const vector<T> &rhs) {
+bool operator>(const nostd::vector<T> &lhs, const std::vector<T> &rhs) {
     return rhs < lhs;
 }
 
@@ -344,5 +328,5 @@ void swap(vector<T> &x, vector<T> &y) {
     x.swap(y);
 }
 
-} // namespace nostd
-#endif // !__VECTOR_H
+}  // namespace nostd
+#endif  // !__VECTOR_H

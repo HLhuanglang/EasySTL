@@ -7,5 +7,5 @@ class map {
 };
 class multimap {
 };
-} // namespace nostd
-#endif // !__MAP_H
+}  // namespace nostd
+#endif  // !__MAP_H

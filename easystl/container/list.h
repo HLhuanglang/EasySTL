@@ -1,54 +1,11 @@
 #ifndef __LIST_H
 #define __LIST_H
-/*
- * ```
- * doubly linked
- * ```
- * list::list
- * list::~list
- *
- * ``` member functions
- * assign
- * back
- * begin
- * cbegin
- * cend
- * clear
- * crbegin
- * crend
- * emplace
- * emplace_back
- * emplace_fron
- * empty
- * end
- * erase
- * front
- * get_allocator
- * insert
- * max_size
- * merge
- * operator=
- * pop_back
- * pop_front
- * push_front
- * push_back
- * rbegin
- * remove
- * remove_if
- * reverse
- * size
- * sort
- * splice
- * swap
- * unique
- * ```
- */
 
 #include <iterator>
 #include <memory>
 
-#include "allocator.h"
-#include "iterator.h"
+#include "base/allocator.h"
+#include "base/iterator.h"
 
 namespace nostd {
 template <typename T>
@@ -61,6 +18,7 @@ class list_const_iterator_t : public std::iterator<std::bidirectional_iterator_t
 
 template <typename T>
 class list {
+ public:
     using value_type = T;
     using allocator_type = nostd::allocator<T>;
     using reference = value_type &;
@@ -86,5 +44,5 @@ template <class T>
 void swap(list<T> &x, list<T> &y) {
     // todo
 }
-} // namespace nostd
+}  // namespace nostd
 #endif

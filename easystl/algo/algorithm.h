@@ -1,11 +1,110 @@
-#pragma once
+#ifndef __ALGORITHM_H
+#define __ALGORITHM_H
 
 #include <iterator>
 #include <utility>
 
-#include <type_traits>
-
 namespace nostd {
+
+/*
+lower_bound
+upper_bound
+equal_range
+binary_search
+*/
+// TODO
+
+/*
+push_heap
+pop_heap
+make_heap
+sort_heap
+is_heap
+is_heap_until
+*/
+// TODO
+
+/*
+merge
+inplace_merge
+includes
+set_union
+set_intersection
+set_difference
+set_symmetric_difference
+*/
+// TODO
+
+/*
+min	Return the smallest (function template)
+max	Return the largest (function template)
+minmax	Return smallest and largest elements (function template)
+min_element	Return smallest element in range (function template)
+max_element	Return largest element in range (function template)
+minmax_element	Return smallest and largest elements in range (function template)
+ */
+// TODO
+
+template <typename T>
+const T &min(const T &a, const T &b) {
+    return !(b < a) ? a : b;
+}
+
+template <typename T, typename Compare>
+const T &min(const T &a, const T &b, Compare cmp) {
+    return !cmp(a < b) ? a : b;
+}
+
+/*
+copy
+copy_n
+copy_if
+copy_backward
+move
+move_backward
+swap
+swap_ranges
+iter_swap
+transform
+replace
+replace_if
+replace_copy
+replace_copy_i
+fill
+fill_n
+generate
+generate_n
+remove
+remove_if
+remove_copy
+remove_copy_if
+unique
+unique_copy
+reverse
+reverse_copy
+rotate
+rotate_copy
+random_shuffle
+shuffle
+*/
+template <class InputIterator, class OutputIterator>
+OutputIterator copy(InputIterator first, InputIterator last, OutputIterator result);
+
+template <class InputIterator, class Size, class OutputIterator>
+OutputIterator copy_n(InputIterator first, Size n, OutputIterator result);
+
+template <class InputIterator, class OutputIterator, class UnaryPredicate>
+OutputIterator copy_if(InputIterator first, InputIterator last, OutputIterator result, UnaryPredicate pred);
+
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+BidirectionalIterator2 copy_backward(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 result);
+
+template <class InputIterator, class OutputIterator>
+OutputIterator move(InputIterator first, InputIterator last, OutputIterator result);
+
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+BidirectionalIterator2 move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last, BidirectionalIterator2 result);
+
 // return true if pred return true for `all` the elements in the range[first,last).
 template <typename InputIterator, typename UnaryPredicate>
 bool all_of(InputIterator first, InputIterator last, UnaryPredicate pred) {
@@ -173,25 +272,33 @@ bool equal(InputIterator1 first1, InputIterator1 last1,
     return true;
 }
 
-template <typename ForwardIterator1, typename ForwardIterator2>
-bool is_permutation(ForwardIterator1 first1, ForwardIterator1 last1,
-                    ForwardIterator2 first2, ForwardIterator2 last2) {
-}
+/*
+lexicographical_compare	Lexicographical less-than comparison (function template)
+next_permutation	Transform range to next permutation (function template)
+prev_permutation	Transform range to previous permutation (function template)
+*/
+// TODO
 
-template <typename ForwardIterator1, typename ForwardIterator2, typename BinaryPredicate>
-bool is_permutation(ForwardIterator1 first1, ForwardIterator1 last1,
-                    ForwardIterator2 first2, ForwardIterator2 last2,
-                    BinaryPredicate pred) {
-}
+/*
+is_partitioned
+partition
+stable_partition
+partition_copy
+partition_point
+*/
+// TODO
 
-template <typename ForwardIterator1, typename ForwardIterator2>
-ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
-                        ForwardIterator2 first2, ForwardIterator2 last2) {
-}
+/*
+sort
+stable_sort
+partial_sort
+partial_sort_copy
+is_sorted
+is_sorted_until
+nth_element
+ */
+// TODO
 
-template <typename ForwardIterator1, typename ForwardIterator2, typename BinaryPredicate>
-ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
-                        ForwardIterator2 first2, ForwardIterator2 last2,
-                        BinaryPredicate pred) {
-}
-} // namespace nostd
+}  // namespace nostd
+
+#endif  // !__ALGORITHM_H

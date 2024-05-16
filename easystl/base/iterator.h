@@ -45,8 +45,7 @@
 #ifndef __ITERATOR_H
 #define __ITERATOR_H
 
-#include <cstddef> //ptrdiff_t定义
-#include <iostream>
+#include <cstddef>  //ptrdiff_t定义
 
 namespace nostd {
 
@@ -57,7 +56,7 @@ struct forward_iterator_tag : public input_iterator_tag {};
 struct bidirectional_iterator_tag : public forward_iterator_tag {};
 struct random_access_iterator_tag : public bidirectional_iterator_tag {};
 
-//-=========================base iterartor
+//-=========================iterartor
 template <typename Category, typename T, typename Distance = ptrdiff_t, typename Pointer = T *, typename Reference = T &>
 struct iterator {
     using iterator_category = Category;
@@ -133,7 +132,7 @@ using reference_t = typename iterator_traits<Iterator>::reference;
 template <typename Iterator>
 class reverse_iterator {
  protected:
-    Iterator current; //与之对应的正向迭代器
+    Iterator current;  // 与之对应的正向迭代器
 
  public:
     using iterator_category = iterator_category_t<Iterator>;
@@ -141,9 +140,8 @@ class reverse_iterator {
     using difference_type = difference_type_t<Iterator>;
     using pointer = pointer_t<Iterator>;
     using reference = reference_t<Iterator>;
-
-    using iterator_type = Iterator; //正向迭代器
-    using self = reverse_iterator;  //反向迭代器
+    using iterator_type = Iterator;  // 正向迭代器
+    using self = reverse_iterator;   // 反向迭代器
 
  public:
     reverse_iterator() {}
@@ -154,9 +152,10 @@ class reverse_iterator {
         : current(value.current) {}
 
     iterator_type base() const { return current; }
+
     reference operator*() const {
         Iterator temp = current;
-        return *--temp; //对逆向迭代器的取值等价于对应的正向迭代器后退一个单位取值
+        return *--temp;  // 对逆向迭代器的取值等价于对应的正向迭代器后退一个单位取值
     }
 
     pointer operator->() const { return &(operator*()); }
@@ -240,168 +239,6 @@ inline reverse_iterator<Iterator> operator+(typename reverse_iterator<Iterator>:
     return reverse_iterator<Iterator>(x.base() - n);
 }
 
-// insert_iterator
-template <typename Container>
-class insert_iterator {
- protected:
-    Container *container; //底层容器
-    typename Container::iterator iter;
-
- public:
-    using iterator_category = output_iterator_tag;
-    using value_tyep = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-
- public:
-    insert_iterator(Container &value, typename Container::iterator i)
-        : container(&value), iter(i) {}
-
-    insert_iterator &operator=(const typename Container::value_type &value) {
-        iter = container->insert(iter, value); //调用insert
-        ++iter;                                //保证insert_iterator永远与目标贴合
-        return *this;
-    }
-
-    // Does nothing. Returns a reference to the object.
-    insert_iterator &operator*() { return *this; }
-    insert_iterator &operator++() { return *this; }
-    insert_iterator &operator++(int) { return *this; }
-};
-
-// back_insert_iterator
-template <typename Container>
-class back_insert_iterator {
- protected:
-    Container *container; //底层容器
-
- public:
-    using iterator_category = output_iterator_tag;
-    using value_tyep = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-
- public:
-    explicit back_insert_iterator(Container &value)
-        : container(&value) {}
-    back_insert_iterator &operator=(
-        const typename Container::value_type &value) {
-        container->push_back(value); //本质上是调用了push_back
-        return *this;
-    }
-
-    // Does nothing. Returns a reference to the object.
-    back_insert_iterator &operator*() { return *this; }
-    back_insert_iterator &operator++() { return *this; }
-    back_insert_iterator operator++(int) { return *this; }
-};
-
-// front_insert_iterator无法用于vector，因为后者不具备push_front
-template <typename Container>
-class front_insert_iterator {
- protected:
-    Container *container; //底层容器
-
- public:
-    using iterator_category = output_iterator_tag;
-    using value_tyep = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-
- public:
-    explicit front_insert_iterator(Container &value)
-        : container(&value) {}
-
-    front_insert_iterator &operator=(
-        const typename Container::value_type &value) {
-        container->push_front(value);
-        return *this;
-    }
-
-    //以下三个接口对back_insert_iterator无用，关闭功能
-    front_insert_iterator &operator*() { return *this; }
-    front_insert_iterator &operator++() { return *this; }
-    front_insert_iterator operator++(int) { return *this; }
-};
-
-// stream:input_stream,output_stream
-
-template <typename T, typename Distance = ptrdiff_t>
-class istream_iterator {
- protected:
-    std::istream *stream;
-    T value;
-    bool end_marker;
-    void read() {
-        end_marker = (*stream) ? true : false;
-        if (end_marker)
-            *stream >> value;
-        //完成输入后，stream状态可能发生了改变，再次判定
-        end_marker = (*stream) ? true : false;
-    }
-
- public:
-    using iterator_category = input_iterator_tag;
-    using value_tyep = T;
-    using difference_type = Distance;
-    using pointer = const T *; //由于身为input_iterator，采用const较为保险
-    using reference = const T &;
-
-    istream_iterator()
-        : stream(&std::cin), end_marker(false) {}
-    explicit istream_iterator(std::istream &s)
-        : stream(&s) {
-        read();
-    }
-
-    reference operator*() const { return value; }
-    pointer operator->() const { return &(operator*()); }
-
-    istream_iterator &operator++() {
-        read();
-        return *this;
-    }
-
-    istream_iterator operator++(int) {
-        istream_iterator temp = *this;
-        read();
-        return temp;
-    }
-};
-
-template <typename T>
-class ostream_iterator {
- protected:
-    std::ostream *stream;
-    const char *interval; //输出间隔符
-
- public:
-    using iterator_category = output_iterator_tag;
-    using value_tyep = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-
-    ostream_iterator()
-        : stream(&std::cout), interval(nullptr) {}
-    ostream_iterator(std::ostream &s, const char *c)
-        : stream(&s), interval(c) {}
-
-    ostream_iterator &operator=(const T &value) {
-        *stream << value;
-        if (interval)
-            *stream << interval;
-        return *this;
-    }
-
-    ostream_iterator &operator*() { return *this; }
-    ostream_iterator &operator++() { return *this; }
-    ostream_iterator operator++(int) { return *this; }
-};
-
 //-=========================functions
 // distance
 template <typename Input>
@@ -449,27 +286,6 @@ inline void advance(Input &i, Distance n) {
     _advance(i, n, iterator_category_t<Input>());
 }
 
-// back_inserter
-template <typename Container>
-inline back_insert_iterator<Container> back_inserter(Container &x) {
-    return back_insert_iterator<Container>(x);
-}
-
-// front_inserter
-template <typename Container>
-inline front_insert_iterator<Container> front_inserter(Container &x) {
-    return front_insert_iterator<Container>(x);
-}
-
-// inserter
-template <typename Container, typename Iterator>
-inline insert_iterator<Container> inserter(Container &x, Iterator i) {
-    return insert_iterator<Container>(x, i);
-}
-
-// move_iterator
-// TODO
-
-} // namespace nostd
+}  // namespace nostd
 
 #endif

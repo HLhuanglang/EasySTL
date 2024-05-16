@@ -8,5 +8,5 @@ class set {
 class multiset {
     // todo
 };
-} // namespace nostd
-#endif // !__SET_H
+}  // namespace nostd
+#endif  // !__SET_H

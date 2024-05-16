@@ -1,10 +1,7 @@
 #ifndef __ALLOCATOR_H
 #define __ALLOCATOR_H
 
-#include <cstddef> //for ptrdiff_t
-#include <iterator>
-
-#include <type_traits>
+#include <cstddef>  //for ptrdiff_t
 
 #include "construct.h"
 
@@ -21,20 +18,24 @@ class allocator {
     using difference_type = ptrdiff_t;
 
  public:
-    static T *allocate();
-    static T *allocate(size_type n);
+    // 使用operator new来申请内存
+    static T *allocate();             //-申请1个元素大小的空间
+    static T *allocate(size_type n);  //-申请N个元素大小的空间
 
-    static void deallocate(T *ptr);
-    static void deallocate(T *ptr, size_type n);
-
+    // 使用placement new，在指定地址调用T的构造函数
     static void construct(T *ptr);
     static void construct(T *ptr, const T &value);
     static void construct(T *ptr, T &&value);
     template <class... Args>
     static void construct(T *ptr, Args &&...args);
 
+    // 显式调用T的析构函数
     static void destroy(T *ptr);
     static void destroy(T *first, T *last);
+
+    // 使用operator delete来申请内存
+    static void deallocate(T *ptr);
+    static void deallocate(T *ptr, size_type n);
 };
 
 template <class T>
@@ -68,26 +69,22 @@ void allocator<T>::deallocate(T *ptr, size_type /*size*/) {
 
 template <class T>
 void allocator<T>::construct(T *ptr) {
-    // new ((void *)ptr) T();
     nostd::construct(ptr);
 }
 
 template <class T>
 void allocator<T>::construct(T *ptr, const T &value) {
-    // new ((void *)ptr) T(value);
     nostd::construct(ptr, value);
 }
 
 template <class T>
 void allocator<T>::construct(T *ptr, T &&value) {
-    // new ((void *)ptr) T(std::move(value));
     nostd::construct(ptr, std::move(value));
 }
 
 template <class T>
 template <class... Args>
 void allocator<T>::construct(T *ptr, Args &&...args) {
-    //::new ((void *)ptr) T(std::forward<Args>(args)...);
     nostd::construct(ptr, std::forward<Args>(args)...);
 }
 
@@ -98,8 +95,9 @@ void allocator<T>::destroy(T *ptr) {
 
 template <class T>
 void allocator<T>::destroy(T *first, T *last) {
-    nostd::destroy(first, last); // 如果destory不封装一层,而是直接在该文件内实现,就会出现stl::allocator<T>::destory(&*ptr) 这种场景,模板参数会其冲突
+    // 此时first的类型是T*, 当调用nostd::destroy时,nostd::destroy的模板类型就变成T*了
+    nostd::destroy(first, last);
 }
-} // namespace nostd
+}  // namespace nostd
 
-#endif // !__ALLOCATOR_H
+#endif  // !__ALLOCATOR_H
