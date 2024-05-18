@@ -13,6 +13,7 @@
 #include "algo/algorithm.h"
 #include "base/allocator.h"
 #include "base/iterator.h"
+#include "base/memory.h"
 
 namespace nostd {
 
@@ -51,14 +52,14 @@ class vector {
     explicit vector(size_type n) {
         m_begin = allocator_type::allocate(n);
         m_end_of_storage = m_begin + n;
-        m_end = std::uninitialized_fill_n(m_begin, n, value_type());
+        m_end = nostd::uninitialized_fill_n(m_begin, n, value_type());
     }
 
     vector(size_type n, const value_type &val, const allocator_type &alloc = allocator_type()) {
         m_begin = alloc.allocate(n);
         m_end = m_begin + n;
         m_end_of_storage = m_begin + n;
-        std::uninitialized_fill(m_begin, m_end, val);
+        nostd::uninitialized_fill(m_begin, m_end, val);
     }
 
     //  如果不加任何判断,当T是int类型时候 nostd::vector<int> v(10,1) 会走到这个逻辑里面来
@@ -68,18 +69,18 @@ class vector {
         size_type n = nostd::distance(first, last);
         m_begin = allocator_type::allocate(n);
         m_end_of_storage = m_begin + n;
-        m_end = std::uninitialized_copy(first, last, m_begin);
+        m_end = nostd::uninitialized_copy(first, last, m_begin);
     }
 
     vector(const vector &other) {
         m_begin = allocator_type::allocate(other.size());
         m_end_of_storage = m_begin + other.capacity();
-        m_end = std::uninitialized_copy(other.begin(), other.end(), m_begin);
+        m_end = nostd::uninitialized_copy(other.begin(), other.end(), m_begin);
     }
     vector(const vector &other, const allocator_type &alloc) {
         m_begin = alloc.allocate(other.size());
         m_end_of_storage = m_begin + other.capacity();
-        m_end = std::uninitialized_copy(other.begin(), other.end(), m_begin);
+        m_end = nostd::uninitialized_copy(other.begin(), other.end(), m_begin);
     }
 
     vector(vector &&other) noexcept {
@@ -151,7 +152,7 @@ class vector {
     void reserve(size_type n) {
         if (n > capacity()) {
             iterator tmp = allocator_type::allocate(n);
-            std::uninitialized_copy(m_begin, m_end, tmp);
+            nostd::uninitialized_copy(m_begin, m_end, tmp);
             allocator_type::deallocate(m_begin, m_end_of_storage - m_begin);
             m_begin = tmp;
             m_end = m_begin + size();
@@ -161,7 +162,7 @@ class vector {
     void shrink_to_fit() {
         if (size() < capacity()) {
             iterator tmp = allocator_type::allocate(size());
-            std::uninitialized_copy(m_begin, m_end, tmp);
+            nostd::uninitialized_copy(m_begin, m_end, tmp);
             allocator_type::deallocate(m_begin, m_end_of_storage - m_begin);
             m_begin = tmp;
             m_end = m_begin + size();
