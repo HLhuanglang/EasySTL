@@ -8,7 +8,11 @@
 
 namespace nostd {
 //-------Non-modifying sequence operations-------//
-// return true if pred return true for `all` the elements in the range[first,last).
+
+///@brief whether all elements in range satisfy condition
+///@param first,last: input iterators defining the range to examine
+///@param pred: unary predicate function that accepts an element in the range as argument
+///@return true if pred return true for `all` the elements in the range[first,last).
 template <typename InputIterator, typename UnaryPredicate>
 bool all_of(InputIterator first, InputIterator last, UnaryPredicate pred) {
     while (first != last) {
@@ -20,7 +24,10 @@ bool all_of(InputIterator first, InputIterator last, UnaryPredicate pred) {
     return true;
 }
 
-// return true if pred return true for `any` of the elements in the range[first,last).
+///@brief whether any element in range satisfy condition
+///@param first,last input iterators defining the range to examine
+///@param pred unary predicate function that accepts an element in the range as argument
+///@return true if pred return true for `any` of the elements in the range[first,last).
 template <typename InputIterator, typename UnaryPredicate>
 bool any_of(InputIterator first, InputIterator last, UnaryPredicate pred) {
     while (first != last) {
@@ -32,7 +39,10 @@ bool any_of(InputIterator first, InputIterator last, UnaryPredicate pred) {
     return false;
 }
 
-// return true if pred return false for `all` of the elements in the range[first,last).
+///@brief whether none element in range satisfy condition
+///@param first,last input iterators defining the range to examine
+///@param pred unary predicate function that accepts an element in the range as argument
+///@return true if pred return true for `none` of the elements in the range[first,last).
 template <typename InputIterator, typename UnaryPredicate>
 bool none_of(InputIterator first, InputIterator last, UnaryPredicate pred) {
     while (first != last) {
@@ -44,7 +54,11 @@ bool none_of(InputIterator first, InputIterator last, UnaryPredicate pred) {
     return true;
 }
 
-// applies fn to each of the elements in the range[first,last).
+///@brief applies function to each of the elements in the range
+///@param first,last input iterators defining the range to examine
+///@param fn unary function that accepts an element in the range as argument
+///@return fn
+///@note if you want to modify the elements in the range, use reference as argument in fn
 template <typename InputIterator, typename Function>
 Function for_each(InputIterator first, InputIterator last, Function fn) {
     while (first != last) {
@@ -54,8 +68,12 @@ Function for_each(InputIterator first, InputIterator last, Function fn) {
     return fn;
 }
 
-// returns an iterator to the first element in the range[first,last) that compares equal
-// to val. The function uses `operator==` to compare the individual elements to val.
+///@brief find the first element in the range that equals to val
+///@param first,last input iterators defining the range to examine
+///@param val value to compare the elements to
+///@return returns an iterator to the first element in the range[first,last) that compares equal to val.
+///@note  uses `operator==` to compare the individual elements to val.
+/// if T is a class, you shuold achieve `operator==`, and mark as const,beacuse val is const.
 template <typename InputIterator, typename T>
 InputIterator find(InputIterator first, InputIterator last, const T& val) {
     while (first != last) {
@@ -67,7 +85,10 @@ InputIterator find(InputIterator first, InputIterator last, const T& val) {
     return last;
 }
 
-// returns an iterator to the first element in the range[first,last) for which pred return `true`
+///@brief find the first element in the range that satisfies pred()
+///@param first,last input iterators defining the range to examine
+///@param pred unary predicate function that accepts an element in the range as argument
+///@return returns an iterator to the first element in the range[first,last) for which pred return `true`
 template <typename InputIterator, typename UnaryPredicate>
 InputIterator find_if(InputIterator first, InputIterator last, UnaryPredicate pred) {
     while (first != last) {
@@ -79,7 +100,10 @@ InputIterator find_if(InputIterator first, InputIterator last, UnaryPredicate pr
     return last;
 }
 
-// returns an iterator to the first element in the range[first,last) for which pred return `false`
+///@brief find the first element in the range that not satisfies pred()
+///@param first,last input iterators defining the range to examine
+///@param pred unary predicate function that accepts an element in the range as argument
+///@return returns an iterator to the first element in the range[first,last) for which pred return `false`
 template <typename InputIterator, typename UnaryPredicate>
 InputIterator find_if_not(InputIterator first, InputIterator last, UnaryPredicate pred) {
     while (first != last) {
@@ -282,7 +306,7 @@ BidirectionalIterator2 move_backward(BidirectionalIterator1 first, Bidirectional
 template <class ForwardIterator1, class ForwardIterator2>
 void swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2) {
     while (first1 != last1) {
-        std::iter_swap(first1, first2);
+        iter_swap(first1, first2);
         ++first1;
         ++first2;
     }
@@ -484,11 +508,38 @@ OutputIterator unique_copy(InputIterator first, InputIterator last, OutputIterat
     return result;
 }
 
+template <class BidirectionalIterator>
+void reverse(BidirectionalIterator first, BidirectionalIterator last) {
+    // TODO
+}
+
+template <class BidirectionalIterator, class OutputIterator>
+OutputIterator reverse_copy(BidirectionalIterator first, BidirectionalIterator last, OutputIterator result) {
+    // TODO
+}
+
+// rotate
+// rotate_copy
+// rando_shuffle
+// shuffle
+
 //------------Partitions------------//
 // TODO
+// is_partitioned
+// partition
+// stable_partition
+// partition_copy
+// partition_point
 
 //------------Sorting operations------------//
 // TODO
+// sort
+// stable_sort
+// partial_sort
+// partial_sort_copy
+// is_sorted
+// is_sorted_until
+// nth_element
 
 // ----------Binary search (operating on partitioned/sorted ranges)----------//
 // lower_bound
@@ -669,7 +720,7 @@ void push_heap(RandomAccessIterator first, RandomAccessIterator last) {
     difference_type hole = len - 1;
     difference_type parent = (hole - 1) / 2;
     while (hole > 0 && *(first + hole) > *(first + parent)) {
-        std::iter_swap(first + hole, first + parent);
+        iter_swap(first + hole, first + parent);
         hole = parent;
         parent = (hole - 1) / 2;
     }
@@ -680,7 +731,7 @@ template <class RandomAccessIterator>
 void pop_heap(RandomAccessIterator first, RandomAccessIterator last) {
     typedef typename std::iterator_traits<RandomAccessIterator>::difference_type difference_type;
     difference_type len = std::distance(first, last);
-    std::iter_swap(first, first + len - 1);
+    iter_swap(first, first + len - 1);
     difference_type hole = 0;
     difference_type child = 2 * hole + 1;
     while (child < len - 1) {
@@ -688,7 +739,7 @@ void pop_heap(RandomAccessIterator first, RandomAccessIterator last) {
             ++child;
         }
         if (*(first + hole) < *(first + child)) {
-            std::iter_swap(first + hole, first + child);
+            iter_swap(first + hole, first + child);
             hole = child;
             child = 2 * hole + 1;
         } else {
@@ -710,7 +761,7 @@ void make_heap(RandomAccessIterator first, RandomAccessIterator last) {
                 ++child;
             }
             if (*(first + hole) < *(first + child)) {
-                std::iter_swap(first + hole, first + child);
+                iter_swap(first + hole, first + child);
                 hole = child;
                 child = 2 * hole + 1;
             } else {
@@ -822,8 +873,78 @@ std::pair<ForwardIterator, ForwardIterator> minmax_element(ForwardIterator first
 }
 
 //-----------other operations-----------//
-// TODO
+// lexicographical_compare
+template <class InputIterator1, class InputIterator2>
+bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
+                             InputIterator2 first2, InputIterator2 last2) {
+    while (first1 != last1 && first2 != last2) {
+        if (*first1 < *first2) {
+            return true;
+        }
+        if (*first2 < *first1) {
+            return false;
+        }
+        ++first1;
+        ++first2;
+    }
+    return (first1 == last1) && (first2 != last2);
+}
 
+// next_permutation
+template <class BidirectionalIterator>
+bool next_permutation(BidirectionalIterator first, BidirectionalIterator last) {
+    if (first == last) {
+        return false;
+    }
+    BidirectionalIterator i = last;
+    if (first == --i) {
+        return false;
+    }
+    while (true) {
+        BidirectionalIterator i1, i2;
+        i1 = i;
+        if (*--i < *i1) {
+            i2 = last;
+            while (!(*i < *--i2)) {
+            }
+            iter_swap(i, i2);
+            reverse(i1, last);
+            return true;
+        }
+        if (i == first) {
+            reverse(first, last);
+            return false;
+        }
+    }
+}
+
+// prev_permutation
+template <class BidirectionalIterator>
+bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last) {
+    if (first == last) {
+        return false;
+    }
+    BidirectionalIterator i = last;
+    if (first == --i) {
+        return false;
+    }
+    while (true) {
+        BidirectionalIterator i1, i2;
+        i1 = i;
+        if (*i < *--i1) {
+            i2 = last;
+            while (!(*--i2 < *i)) {
+            }
+            iter_swap(i, i2);
+            reverse(i1, last);
+            return true;
+        }
+        if (i == first) {
+            reverse(first, last);
+            return false;
+        }
+    }
+}
 }  // namespace nostd
 
 #endif  // !__ALGORITHM_H
