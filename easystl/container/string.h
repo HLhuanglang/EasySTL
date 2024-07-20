@@ -2,51 +2,67 @@
 #define __BASIC_STRING_H
 
 #include <cstddef>
+#include <cstdint>
+#include <cstdio>  // For EOF.
 #include <cstring>
+#include <cwchar>
+#include <ios>
 
 #include "base/allocator.h"
 #include "base/iterator.h"
 
 namespace nostd {
-// 字符特性基类模板
-template <class CharType, class IntType>
-class CharTraitsBase {
- public:
-    typedef CharType char_type;  // 字符类型
-    typedef IntType int_type;    // int类型
- public:
-    // 字符赋值
-    static void assign(char_type &c1, const char_type &c2) { c1 = c2; }
 
+// https://github.com/dwdwdw/stl/blob/master/llvm/include/string
+
+template <class CharType, class IntType>
+class char_traits_base {
+ public:
+    using char_type = CharType;       // char_type:The template parameter (charT)
+    using int_type = IntType;         // int_type: Integral type that can represent all charT values, as well as eof()
+    using off_type = std::streamoff;  // off_type: A type that behaves like streamoff
+    using pos_type = std::streampos;  // pos_type: A type that behaves like streampos
+    using state_type = mbstate_t;     // state_type: Multibyte transformation state type, such as mbstate_t
+ public:
     // 字符比较
-    static bool eq(const CharType &c1, const CharType &c2) {
+    static bool eq(const char_type &c1, const char_type &c2) noexcept {
         return c1 == c2;
     }
 
     // 字符大小比较
-    static bool lt(const CharType &c1, const CharType &c2) {
+    static bool lt(const char_type &c1, const char_type &c2) noexcept {
         return c1 < c2;
     }
 
+    // 字串长度
+    static size_t length(const char_type *s) noexcept {
+        const char_type __nullchar = char_type(0);  // char()就是'\0'
+        size_t len;
+        for (; !eq(*s, __nullchar); ++s) {
+            ++len;
+        }
+        return len;
+    }
+
+    // 字符赋值
+    static void assign(char_type &c1, const char_type &c2) noexcept { c1 = c2; }
+    // 字符串赋值
+    static char_type *assign(char_type *s, size_t n, char_type c) noexcept {
+        for (size_t i = 0; i < n; ++i)
+            s[i] = c;
+        return s;
+    }
+
     // 字串比较
-    static int compare(const CharType *s1, const CharType *s2, size_t n) {
+    static int compare(const char_type *s1, const char_type *s2, size_t n) noexcept {
         for (size_t i = 0; i < n; ++i)
             if (!eq(s1[i], s2[i]))
                 return s1[i] < s2[i] ? -1 : 1;
         return 0;
     }
 
-    // 字串长度
-    static size_t length(const CharType *s) {
-        const CharType __nullchar = CharType();  // char()就是'\0'
-        size_t i;
-        for (i = 0; !eq(s[i], __nullchar); ++i) {
-        }
-        return i;
-    }
-
     // 在串中查找字符
-    static const CharType *find(const CharType *s, size_t n, const CharType &c) {
+    static const char_type *find(const char_type *s, size_t n, const char_type &c) noexcept {
         for (; n > 0; ++s, --n)
             if (eq(*s, c))
                 return s;
@@ -54,95 +70,117 @@ class CharTraitsBase {
     }
 
     // 字符串移到另一字符串
-    static CharType *move(CharType *s1, const CharType *s2, size_t n) {
-        memmove(s1, s2, n * sizeof(CharType));
-        return s1;
+    static char_type *move(char_type *__s1, const char_type *__s2, size_t __n) noexcept {
+        char_type *__r = __s1;
+        if (__s1 < __s2) {
+            for (; __n; --__n, ++__s1, ++__s2)
+                assign(*__s1, *__s2);
+        } else if (__s2 < __s1) {
+            // 防止内存重叠导致覆盖
+            __s1 += __n;
+            __s2 += __n;
+            for (; __n; --__n)
+                assign(*--__s1, *--__s2);
+        }
+        return __r;
     }
 
     // 拷贝一字符串到另字符串
-    static CharType *copy(CharType *s1, const CharType *s2, size_t n) {
-        memcpy(s1, s2, n * sizeof(CharType));
-        return s1;
+    static char_type *copy(char_type *__s1, const char_type *__s2, size_t __n) noexcept {
+        static_assert(__s2 < __s1 || __s2 >= __s1 + __n, "char_traits::copy overlapped range");
+        char_type *__r = __s1;
+        for (; __n; --__n, ++__s1, ++__s2)
+            assign(*__s1, *__s2);
+        return __r;
     }
 
-    // 字符串赋值
-    static CharType *assign(CharType *s, size_t n, CharType c) {
-        for (size_t i = 0; i < n; ++i)
-            s[i] = c;
-        return s;
+    // 返回结束整型值
+    static int_type eof() noexcept {
+        return int_type(EOF);
     }
 
     // 判断是否为结束符
-    static int_type not_eof(const int_type &c) {
-        return !eq_int_type(c, eof()) ? c : 0;
+    static int_type not_eof(int_type c) noexcept {
+        return eq_int_type(c, eof()) ? ~eof() : c;
     }
 
     // int到char类型的转换
-    static char_type to_char_type(const int_type &c) {
+    static char_type to_char_type(int_type c) noexcept {
         return static_cast<char_type>(c);
     }
 
     // char到int类型的转换
-    static int_type to_int_type(const char_type &c) {
+    static int_type to_int_type(char_type c) noexcept {
         return static_cast<int_type>(c);
     }
 
     // 判断俩int类型是否相等
-    static bool eq_int_type(const int_type &c1, const int_type &c2) {
+    static bool eq_int_type(int_type c1, int_type c2) noexcept {
         return c1 == c2;
-    }
-
-    // 返回结束整型值
-    static int_type eof() {
-        return static_cast<int_type>(-1);
     }
 };
 
+// 灵活性：可以实现对不同的字符类型定制化字符特征
 template <class _CharT>
-class CharTraits : public CharTraitsBase<_CharT, _CharT> {};
+class char_traits : public char_traits_base<_CharT, int> {};
 
 // Specialization for char.
-// char字符类型模板偏特化
 template <>
-class CharTraits<char> : public CharTraitsBase<char, int> {
+class char_traits<char> : public char_traits_base<char, int> {
  public:
-    // int类型到char类型的转换
     static char_type to_char_type(const int_type &c) {
         return static_cast<char_type>(static_cast<unsigned char>(c));
     }
-
-    // char到int类型的转换
     static int_type to_int_type(const char_type &c) {
         return static_cast<unsigned char>(c);
     }
-
-    // 比较两个字符串
     static int compare(const char *s1, const char *s2, size_t n) {
         return memcmp(s1, s2, n);
     }
-
-    // 字符串的长度
     static size_t length(const char *s) { return strlen(s); }
-
-    // 字符赋值
     static void assign(char &c1, const char &c2) { c1 = c2; }
-
-    // 字串赋值
     static char *assign(char *s, size_t n, char c) {
         memset(s, c, n);
         return s;
     }
 };
 
-template <class CharType, class CharTraits = nostd::CharTraits<CharType>>
+// Specialization for wchar_t.
+template <>
+class char_traits<wchar_t> : public char_traits_base<wchar_t, wint_t> {
+ public:
+    static wchar_t to_char_type(const int_type &c) { return static_cast<wchar_t>(c); }
+    static int_type to_int_type(const wchar_t &c) { return static_cast<int_type>(c); }
+    static int compare(const wchar_t *s1, const wchar_t *s2, size_t n) {
+        return wmemcmp(s1, s2, n);
+    }
+    static size_t length(const wchar_t *s) { return wcslen(s); }
+    static void assign(wchar_t &c1, const wchar_t &c2) { c1 = c2; }
+    static wchar_t *assign(wchar_t *s, size_t n, wchar_t c) {
+        wmemset(s, c, n);
+        return s;
+    }
+};
+
+// Specialization for char16_t.
+template <>
+class char_traits<char16_t> : public char_traits_base<char16_t, uint_least16_t> {
+ public:
+    using pos_type = std::u16streampos;
+};
+
+// Specialization for char32_t.
+template <>
+class char_traits<char32_t> : public char_traits_base<char, uint_least32_t> {
+ public:
+    using pos_type = std::u32streampos;
+};
+
+template <class charT, class traits = nostd::char_traits<charT>, class Alloc = nostd::allocator<charT>>
 class basic_string {
  public:
-    using traits_type = CharTraits;
-    using char_traits = CharTraits;
-
-    using allocator_type = nostd::allocator<CharType>;
-    using data_allocator = nostd::allocator<CharType>;
-
+    using traits_type = traits;
+    using allocator_type = Alloc;
     using value_type = typename allocator_type::value_type;
     using pointer = typename allocator_type::pointer;
     using const_pointer = typename allocator_type::const_pointer;
@@ -150,7 +188,6 @@ class basic_string {
     using const_reference = typename allocator_type::const_reference;
     using size_type = typename allocator_type::size_type;
     using difference_type = typename allocator_type::difference_type;
-
     using iterator = value_type *;
     using const_iterator = const value_type *;
     using reverse_iterator = nostd::reverse_iterator<iterator>;
@@ -158,9 +195,31 @@ class basic_string {
 
     allocator_type get_allocator() { return allocator_type(); }
 
-    static_assert(std::is_pod<CharType>::value, "Character type of basic_string must be a POD");
-    static_assert(std::is_same<CharType, typename traits_type::char_type>::value,
-                  "CharType must be same as traits_type::char_type");
+    static_assert(std::is_pod<charT>::value, "Character type of basic_string must be a POD");
+    static_assert(std::is_same<charT, typename traits_type::char_type>::value,
+                  "charT must be same as traits_type::charT");
+
+ public:
+    explicit basic_string(const allocator_type &alloc = allocator_type());
+    basic_string(const basic_string &str);
+    basic_string(const basic_string &str, const allocator_type &alloc);
+    basic_string(const basic_string &str, size_type pos, size_type len = npos, const allocator_type &alloc = allocator_type());
+    basic_string(const charT *s, const allocator_type &alloc = allocator_type());
+    basic_string(const charT *s, size_type n, const allocator_type &alloc = allocator_type());
+    basic_string(size_type n, charT c, const allocator_type &alloc = allocator_type());
+    template <class InputIterator>
+    basic_string(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type());
+    basic_string(std::initializer_list<charT> il, const allocator_type &alloc = allocator_type());
+    basic_string(basic_string &&str) noexcept;
+    basic_string(basic_string &&str, const allocator_type &alloc);
+
+    ~basic_string();
+
+    basic_string &operator=(const basic_string &str);
+    basic_string &operator=(const charT *s);
+    basic_string &operator=(charT c);
+    basic_string &operator=(std::initializer_list<charT> il);
+    basic_string &operator=(basic_string &&str) noexcept;
 
  public:
     // 末尾位置的值，例:
@@ -173,7 +232,14 @@ class basic_string {
     size_type m_cap;    // 容量
 };
 
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>::basic_string(const allocator_type &alloc)
+    : m_buffer(nullptr), m_size(0), m_cap(0) {}
+
 using string = basic_string<char>;
+using wstring = basic_string<wchar_t>;
+using u16string = basic_string<char16_t>;
+using u32string = basic_string<char32_t>;
 
 }  // namespace nostd
 #endif
